@@ -9,11 +9,15 @@ import '../../css/app.css';
 import { useEffect, useState } from 'react';
 import ReactPaginate from'react-paginate';
 type Task = {
+    email : string
+    name : string
+    message:[{
     id : number
     body : string
     user_id : number
     created_at : Date
     updated_at : Date
+}]
 }
 type Page = {
     page : number
@@ -22,7 +26,7 @@ type Page = {
 const Index  = () => {
 
     const url = "http://localhost/api/index";
-    const [posts, setPost] = useState<Task[]>([]);
+    const [posts, setPost] = useState([]);
     const [state, setState] = useState(null);
     const [pages, setPages] = useState();
 
@@ -43,12 +47,13 @@ const Index  = () => {
         window.location.reload();
     }
     var Value;
+    let json1;
     const getPage = async (val) => {
           await axios
           .get(url, { params: {page : val} })
           .then((res) => {
-             setPost(res.data.message);
-
+             setPost(res.data);
+             //console.log(res.data);
           })
           .catch((error)=> {
             console.log(error);
@@ -58,6 +63,7 @@ const Index  = () => {
         axios.get('api/index?page=' + value).then(response => {
             setPost(response.data.data);
             console.log(response.data.data);
+            console.log(posts);
         });
     }
 
@@ -67,12 +73,15 @@ const Index  = () => {
 
         .then((response) => {
 
-            setPost(response.data.data);
 
-            console.log(response.data.data);
 
-            console.log(response.data.last_page);
+            //console.log(response.data.last_page);
             setPages(response.data.last_page);
+
+            //console.log(response.data);
+            //console.log(response.data.data);
+            setPost(response.data.data);
+            console.log(posts);
 
         })
         .catch((error) =>{
@@ -117,6 +126,7 @@ const Index  = () => {
 
         </div>
         <table className="table_css" border="1" width="80%">
+                {
                 <thead>
                 <th >id </th>
                 <th >User id</th>
@@ -124,30 +134,48 @@ const Index  = () => {
                 <th >create_at</th>
                 <th> name</th>
                 </thead>
+
+
+                }
                 <tbody>
                 {
-                    posts.map((item)=> (
 
-                        <>
-                            {
-                                item.message.map((items)=>(
-                                    <tr>
-                                    <td>{items.id}</td>
-                                    <td>{items.user_id}</td>
-                                    <td>{items.body}</td>
-                                    <td>{items.created_at}</td>
-                                    <td>{item.name}</td>
-                                    </tr>
-                                ))
-                            }
+
+                    posts.map((item) => {
+                        return (
+                            <>
+                                <tr>
+                                    <td>{item.id}</td>
+                                    <td>{item.user_id}</td>
+                                    <td>{item.body}</td>
+                                    <td>{item.created_at}</td>
+                                    <td>no name</td>
+                                </tr>
+
+
+
+
 
 
                             </>
-                    ))
-                }
-           
+                        );
 
-        </tbody>
+
+                    })
+
+
+
+
+
+
+
+                }
+
+
+
+               </tbody>
+
+
         </table>
 
 

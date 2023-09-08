@@ -44,6 +44,10 @@ class User extends Authenticatable
 
     public function message()
     {
-        return $this->hasMany(Messages::class, 'user_id');
+        return $this->hasMany(Messages::class);
+    }
+    public function all_messages()
+    {
+        return $this->hasMany(Messages::class);
     }
 }
